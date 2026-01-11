@@ -18,4 +18,8 @@ class FlipperCommands(commands.Cog):
     async def flip(self, interaction: discord.Interaction, query: str):
         await interaction.response.defer()
         itens = query.split(", ")
-        await interaction.followup.send(random.choice(itens))
+        logger.info(itens)
+
+        selected_item = random.choice(itens)
+        await interaction.followup.send(selected_item)
+        logger.info(selected_item)
