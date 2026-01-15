@@ -166,7 +166,6 @@ class FlipperCommands(commands.Cog):
         await interaction.response.defer()
         # Normaliza e remove itens vazios
         items = [item.strip() for item in query.split(",") if item.strip()]
-        logger.info("flip items: %s", items)
 
         if not items:
             await interaction.followup.send(
@@ -177,7 +176,7 @@ class FlipperCommands(commands.Cog):
 
         # Seleciona um item aleatorio
         selected_item = random.choice(items)
-        logger.info("flip selected: %s", selected_item)
+        logger.info("flip items: %s -> %s", items, selected_item)
 
         # Monta a lista numerada
         items_list = "\n".join(f"**{i} - ** {v}" for i, v in enumerate(items, start=1))
