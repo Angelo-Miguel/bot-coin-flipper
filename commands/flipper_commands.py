@@ -2,6 +2,7 @@ from discord import app_commands
 from discord.ext import commands
 import discord
 import random
+from config import Config
 
 from utils.logger import get_logger
 
@@ -92,18 +93,18 @@ class ReflipView(discord.ui.View):
 
     @discord.ui.button(label="Reflip", style=discord.ButtonStyle.primary, emoji="🔁")
     async def reflip(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if Config.ONLY_OWNER == True:
+            if interaction.user != self.author:
+                logger.warning(
+                    "unauthorized reflip attempt | by=%s | owner=%s",
+                    interaction.user,
+                    self.author,
+                )
 
-        if interaction.user != self.author:
-            logger.warning(
-                "unauthorized reflip attempt | by=%s | owner=%s",
-                interaction.user,
-                self.author,
-            )
-
-            await interaction.response.send_message(
-                "Apenas quem pediu pode reflipar.", ephemeral=True
-            )
-            return
+                await interaction.response.send_message(
+                    "Apenas quem pediu pode reflipar.", ephemeral=True
+                )
+                return
 
         selected_item = random.choice(self.items)
         self.flips += 1
@@ -141,17 +142,18 @@ class ReflipView(discord.ui.View):
     async def edit_query(
         self, interaction: discord.Interaction, button: discord.ui.Button
     ):
-        if interaction.user != self.author:
-            logger.warning(
-                "unauthorized edit attempt | by=%s | owner=%s",
-                interaction.user,
-                self.author,
-            )
+        if Config.ONLY_OWNER == True:
+            if interaction.user != self.author:
+                logger.warning(
+                    "unauthorized edit attempt | by=%s | owner=%s",
+                    interaction.user,
+                    self.author,
+                )
 
-            await interaction.response.send_message(
-                "Apenas quem pediu pode editar.", ephemeral=True
-            )
-            return
+                await interaction.response.send_message(
+                    "Apenas quem pediu pode editar.", ephemeral=True
+                )
+                return
         await interaction.response.send_modal(EditQueryModal(self))
 
 
